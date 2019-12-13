@@ -28,7 +28,7 @@ pipeline{
                 echo "========executing Docker push========"
                 sh(
                     label: "push docker images",
-                    script: "docker push -t san360/static:$BUILD_NUMBER"
+                    script: "docker push san360/static:$BUILD_NUMBER"
                 )
             }
         }
