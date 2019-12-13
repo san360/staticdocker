@@ -32,5 +32,23 @@ pipeline{
                 )
             }
         }
+        stage("Docker deploy"){
+            steps{
+                echo "========executing Docker push========"
+                 withCredentials([usernamePassword(credentialsId: 'i360_login', usernameVariable:'USERNAME',passwordVariable:'PASSWORD')]){
+
+                    script {
+                        sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull san360/static:${env.BUILD_NUMBER}\""
+                        try {
+                            sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker stop train-schedule\""
+                            sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker rm train-schedule\""
+                        } catch (err) {
+                            echo: 'caught error: $err'
+                        }
+                        sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker run --restart never --name train-schedule -p 8080:8080 -d san360/static:${env.BUILD_NUMBER}\""
+                    }
+                }
+            }
+        }
     }
 }
