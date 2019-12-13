@@ -1,0 +1,2 @@
+# staticdocker
+static docker 
