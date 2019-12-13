@@ -8,7 +8,7 @@ pipeline{
                 echo "========executing A========"
                 sh(
                     label: "build docker",
-                    script: "docker build --no-cache -t san360/static:$IMAGE_VERSION"
+                    script: "docker build --no-cache -t san360/static:$BUILD_NUMBER ."
                 )
             }
         }
